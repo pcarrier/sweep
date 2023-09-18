@@ -63,9 +63,10 @@ func main() {
 				log.Printf("Uploading %s", path)
 
 				shortPath, _ := strings.CutPrefix(path, "/")
-				gcsPath := fmt.Sprintf("%04d/%02d/%02d/%s/%s",
+				gcsPath := fmt.Sprintf("%04d/%02d/%02d/%s/%s_%02d:%02d:%02d",
 					mtime.Year(), mtime.Month(), mtime.Day(),
-					hostname, shortPath)
+					hostname, shortPath,
+					mtime.Hour(), mtime.Minute(), mtime.Second())
 				writer := gcs.
 					Bucket(*bucket).
 					Object(gcsPath).
