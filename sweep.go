@@ -20,7 +20,7 @@ var (
 	interval  = flag.Duration("interval", time.Minute, "Time interval to check for new uploads")
 	minAge    = flag.Duration("minage", time.Minute, "Minimum mtime age for a file to be considered for transfer")
 	root      = flag.String("root", "/var/crash", "Directory to transfer")
-	channelId = flag.String("slackchannelid", "C17LW51GR", "Slack channel for announcements")
+	channelId = flag.String("slackchannelid", "C05SP2XRK7G", "Slack channel for announcements")
 )
 
 func main() {
