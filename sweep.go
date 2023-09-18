@@ -17,8 +17,8 @@ import (
 
 var (
 	bucket    = flag.String("bucket", "", "GCS bucket for uploads")
-	interval  = flag.Duration("interval", time.Minute, "Interval in seconds to check for new files")
-	minAge    = flag.Duration("minage", time.Minute, "Minimum age in seconds for a file to be considered for transfer")
+	interval  = flag.Duration("interval", time.Minute, "Time interval to check for new uploads")
+	minAge    = flag.Duration("minage", time.Minute, "Minimum mtime age for a file to be considered for transfer")
 	root      = flag.String("root", "/var/crash", "Directory to transfer")
 	channelId = flag.String("slackchannelid", "C17LW51GR", "Slack channel for announcements")
 )
