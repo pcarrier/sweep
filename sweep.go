@@ -64,7 +64,7 @@ func main() {
 			if mtime.After(newestUploaded) {
 				log.Printf("Skipping %s, too new", path)
 			} else {
-				log.Printf("Uploading %s", path)
+				log.Printf("Uploading %s (%d bytes)", path, fi.Size())
 
 				shortPath, _ := strings.CutPrefix(path, "/")
 				gcsPath := fmt.Sprintf("%04d/%02d/%02d/%s/%s/%02d:%02d:%02d",
