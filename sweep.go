@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	bucket    = flag.String("bucket", "", "GCS bucket for uploads")
+	bucket    = flag.String("bucket", "", "GCS bucket to transfer to")
 	interval  = flag.Duration("interval", time.Minute, "Time interval to check for new uploads")
 	minAge    = flag.Duration("min-age", time.Minute, "Minimum mtime age for a file to be considered for transfer")
 	root      = flag.String("root", "/var/crash", "Directory to transfer")
