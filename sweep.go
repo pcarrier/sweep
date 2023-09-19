@@ -3,6 +3,7 @@ package main
 import (
 	"cloud.google.com/go/storage"
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"github.com/slack-go/slack"
@@ -89,12 +90,20 @@ func main() {
 				if err = file.Close(); err != nil {
 					return fmt.Errorf("close error: %w", err)
 				}
-				if _, _, err = chat.PostMessage(*channelId,
-					slack.MsgOptionText(
-						fmt.Sprintf("Uploaded `gs://%s/%s`",
+				for {
+					if _, _, err = chat.PostMessage(*channelId, slack.MsgOptionText(
+						fmt.Sprintf("Uploaded `gs://%s/%s` (%d bytes)",
 							*bucket,
-							gcsPath), false)); err != nil {
-					return fmt.Errorf("error from slack: %w", err)
+							gcsPath,
+							fi.Size()), false)); err != nil {
+						var rlError *slack.RateLimitedError
+						if errors.As(err, &rlError) {
+							log.Printf("Rate limited, sleeping %s", rlError.RetryAfter)
+							time.Sleep(rlError.RetryAfter)
+							break
+						}
+						return fmt.Errorf("error from slack: %w", err)
+					}
 				}
 				if err = os.Remove(path); err != nil {
 					return fmt.Errorf("remove error: %w", err)
