@@ -6,4 +6,6 @@ Scans through a directory and uploads anything with an old enough `mtime`.
 
 Requires the `SLACK_TOKEN` environment variable, and Google Cloud authentication. Options in `-help`.
 
+This process exits early on failures, and is expected to be restarted.
+
 A Docker image is published to [DockerHub](https://hub.docker.com/repository/docker/pcarrier/sweep).
