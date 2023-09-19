@@ -27,19 +27,20 @@ var (
 func main() {
 	flag.Parse()
 
+	hostname, err := os.Hostname()
+	if err != nil {
+		log.Fatalf("Couldn't read hostname: %v", err)
+	}
+
 	slackToken, found := os.LookupEnv("SLACK_TOKEN")
 	if !found {
 		log.Fatal("Please set SLACK_TOKEN")
 	}
-
 	chat := slack.New(slackToken)
+
 	gcs, err := storage.NewClient(context.Background())
 	if err != nil {
 		log.Fatalf("Couldn't initialize GCS: %v", err)
-	}
-	hostname, err := os.Hostname()
-	if err != nil {
-		log.Fatalf("Couldn't read hostname: %v", err)
 	}
 
 	ticker := time.NewTicker(*interval)
@@ -85,7 +86,6 @@ func main() {
 				}
 				if err = writer.Close(); err != nil {
 					return fmt.Errorf("GCS close error: %w", err)
-
 				}
 				if err = file.Close(); err != nil {
 					return fmt.Errorf("close error: %w", err)
