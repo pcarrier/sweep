@@ -103,6 +103,8 @@ func main() {
 							break
 						}
 						return fmt.Errorf("error from slack: %w", err)
+					} else {
+						break
 					}
 				}
 				if err = os.Remove(path); err != nil {
