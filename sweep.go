@@ -38,6 +38,9 @@ func main() {
 	}
 	chat := slack.New(slackToken)
 
+	if *bucket == "" {
+		log.Fatalf("Please pass -bucket")
+	}
 	gcs, err := storage.NewClient(context.Background())
 	if err != nil {
 		log.Fatalf("Couldn't initialize GCS: %v", err)
