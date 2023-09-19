@@ -61,14 +61,14 @@ func main() {
 				return fmt.Errorf("stat error: %w", err)
 			}
 
-			mtime := fi.ModTime()
+			mtime := fi.ModTime().UTC()
 			if mtime.After(newestUploaded) {
 				log.Printf("Skipping %s, too new", path)
 			} else {
 				log.Printf("Uploading %s (%d bytes)", path, fi.Size())
 
 				shortPath, _ := strings.CutPrefix(path, "/")
-				gcsPath := fmt.Sprintf("%s/%s@%04d-%02d-%02dT%02d:%02d:%02d",
+				gcsPath := fmt.Sprintf("%s/%s@%04d-%02d-%02dT%02d:%02d:%02dZ",
 					hostname, shortPath,
 					mtime.Year(), mtime.Month(), mtime.Day(),
 					mtime.Hour(), mtime.Minute(), mtime.Second())
