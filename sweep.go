@@ -18,9 +18,9 @@ import (
 var (
 	bucket    = flag.String("bucket", "", "GCS bucket for uploads")
 	interval  = flag.Duration("interval", time.Minute, "Time interval to check for new uploads")
-	minAge    = flag.Duration("minage", time.Minute, "Minimum mtime age for a file to be considered for transfer")
+	minAge    = flag.Duration("min-age", time.Minute, "Minimum mtime age for a file to be considered for transfer")
 	root      = flag.String("root", "/var/crash", "Directory to transfer")
-	channelId = flag.String("slackchannelid", "C05SP2XRK7G", "Slack channel for announcements")
+	channelId = flag.String("slack-channel-id", "C05SP2XRK7G", "Slack channel for announcements")
 )
 
 func main() {
@@ -63,7 +63,7 @@ func main() {
 				log.Printf("Uploading %s", path)
 
 				shortPath, _ := strings.CutPrefix(path, "/")
-				gcsPath := fmt.Sprintf("%04d/%02d/%02d/%s/%s_%02d:%02d:%02d",
+				gcsPath := fmt.Sprintf("%04d/%02d/%02d/%s/%s/%02d:%02d:%02d",
 					mtime.Year(), mtime.Month(), mtime.Day(),
 					hostname, shortPath,
 					mtime.Hour(), mtime.Minute(), mtime.Second())
