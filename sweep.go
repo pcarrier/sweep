@@ -2,6 +2,7 @@ package main
 
 import (
 	"cloud.google.com/go/storage"
+	"compress/gzip"
 	"context"
 	"errors"
 	"flag"
@@ -72,7 +73,7 @@ func main() {
 				log.Printf("Uploading %s (%d bytes)", path, fi.Size())
 
 				shortPath, _ := strings.CutPrefix(path, "/")
-				gcsPath := fmt.Sprintf("%s/%s@%04d-%02d-%02dT%02d:%02d:%02dZ",
+				gcsPath := fmt.Sprintf("%s/%s@%04d-%02d-%02dT%02d:%02d:%02dZ.gz",
 					hostname, shortPath,
 					mtime.Year(), mtime.Month(), mtime.Day(),
 					mtime.Hour(), mtime.Minute(), mtime.Second())
@@ -80,12 +81,16 @@ func main() {
 					Bucket(*bucket).
 					Object(gcsPath).
 					NewWriter(context.Background())
+				gzWriter := gzip.NewWriter(writer)
 				file, err := os.Open(path)
 				if err != nil {
 					return fmt.Errorf("open error: %w", err)
 				}
-				if _, err = io.Copy(writer, file); err != nil {
+				if _, err = io.Copy(gzWriter, file); err != nil {
 					return fmt.Errorf("copy error: %w", err)
+				}
+				if err = gzWriter.Close(); err != nil {
+					return fmt.Errorf("gzip close error: %w", err)
 				}
 				if err = writer.Close(); err != nil {
 					return fmt.Errorf("GCS close error: %w", err)
